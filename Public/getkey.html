@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Key - AI Key Generator</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght=300;400;600&display=swap" rel="stylesheet">
+    <!-- PropellerAds SDK -->
+    <script src="https://cdn.propellerads.com/publisher.js" async></script>
+</head>
+<body>
+    <!-- Hamburger Menu -->
+    <nav class="navbar">
+        <div class="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="getkey.html">Get Key</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <h1>Get Your Key</h1>
+        <div class="cards-container">
+            <div class="card" data-ads-required="3" data-validity="10">
+                <h3>Basic Key</h3>
+                <p>Validity: 10 minutes</p>
+                <p>Ads required: 3</p>
+                <div class="blurred-key">###########</div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <p class="progress-text">0/3 ads</p>
+                <button class="watch-ads-btn">Watch Ads</button>
+            </div>
+            <div class="card" data-ads-required="6" data-validity="30">
+                <h3>Standard Key</h3>
+                <p>Validity: 30 minutes</p>
+                <p>Ads required: 6</p>
+                <div class="blurred-key">###########</div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <p class="progress-text">0/6 ads</p>
+                <button class="watch-ads-btn">Watch Ads</button>
+            </div>
+            <div class="card" data-ads-required="8" data-validity="60">
+                <h3>Good Key</h3>
+                <p>Validity: 1 hour</p>
+                <p>Ads required: 8</p>
+                <div class="blurred-key">###########</div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <p class="progress-text">0/8 ads</p>
+                <button class="watch-ads-btn">Watch Ads</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="about.html" target="_blank">About</a>
+            <a href="privacy.html" target="_blank">Privacy Policy</a>
+            <a href="mailto:support@yourwebsite.com" target="_blank">Contact</a>
+        </div>
+        <p>&copy; 2026 AI Key Generator. All rights reserved.</p>
+    </footer>
+
+    <!-- Popup Modal for Key -->
+    <div id="keyModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Your Key is Ready!</h2>
+            <div id="generatedKey" class="key-display"></div>
+            <button id="copyKey" class="copy-btn">Copy Key</button>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+</html>
