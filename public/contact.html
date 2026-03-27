@@ -1,1 +1,70 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Halurea Key System</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="hamburger">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="getkey.html">Get Key</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="contact">
+            <h1>Contact Us</h1>
+            <p>If you have any questions, suggestions, or problems related to the use of this website, you can contact us through this official website or via:</p>
+            <p><a href="https://discord.gg/hWswsZwgkF" target="_blank" class="discord-link">Official Discord</a></p>
+            <p>We will try to help as soon as possible.</p>
+
+            <form id="supportForm" class="contact-form">
+                <input type="text" name="user_name" placeholder="Name" required>
+                <input type="email" name="user_email" placeholder="Email" required>
+                <textarea name="message" placeholder="Your issue..." required></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <p>&copy; 2026 Halurea Key System. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        emailjs.init("z7ivKsmDeHkrAhUkN");
+
+        document.getElementById("supportForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            emailjs.sendForm("service_39jqmhf", "template_k494lak", this)
+                .then(() => {
+                    alert("✅ Message sent!");
+                    this.reset();
+                })
+                .catch((error) => {
+                    alert("❌ Failed to send");
+                    console.error(error);
+                });
+        });
+    </script>
+</body>
+</html>
