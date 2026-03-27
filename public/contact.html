@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,59 +20,50 @@
             <li><a href="contact.html">Contact</a></li>
             <li><a href="privacy.html">Privacy</a></li>
         </ul>
-    </nav><main>
-    <section class="contact">
-        <h1>Contact Us</h1>
-        <p>If you have any questions, suggestions, or problems related to the use of this website, you can contact us through this official website or via:</p>
-        <p><a href="https://discord.gg/hWswsZwgkF" target="_blank" class="discord-link">Official Discord</a></p>
-        <p>We will try to help as soon as possible.</p>
+    </nav>
 
-        <form id="supportForm" class="contact-form">
-            <input type="text" name="user_name" placeholder="Name" required>
-            <input type="email" name="user_email" placeholder="Email" required>
-            <textarea name="message" placeholder="Your issue..." required></textarea>
-            <button type="submit">Send</button>
-        </form>
-    </section>
-</main>
+    <main>
+        <section class="contact">
+            <h1>Contact Us</h1>
+            <p>If you have any questions, suggestions, or problems related to the use of this website, you can contact us through this official website or via:</p>
+            <p><a href="https://discord.gg/hWswsZwgkF" target="_blank" class="discord-link">Official Discord</a></p>
+            <p>We will try to help as soon as possible.</p>
 
-<footer>
-    <div class="footer-links">
-        <a href="about.html">About</a>
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="contact.html">Contact</a>
-    </div>
-    <p>&copy; 2026 Halurea Key System. All rights reserved.</p>
-</footer>
+            <form id="supportForm" class="contact-form">
+                <input type="text" name="user_name" placeholder="Name" required>
+                <input type="email" name="user_email" placeholder="Email" required>
+                <textarea name="message" placeholder="Your issue..." required></textarea>
+                <button type="submit">Send</button>
+            </form>
+        </section>
+    </main>
 
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-    emailjs.init("z7ivKsmDeHkrAhUkN");
+    <footer>
+        <div class="footer-links">
+            <a href="about.html">About</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
+        </div>
+        <p>&copy; 2026 Halurea Key System. All rights reserved.</p>
+    </footer>
 
-    document.getElementById("supportForm").addEventListener("submit", function(e) {
-        e.preventDefault();
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script>
+        emailjs.init("z7ivKsmDeHkrAhUkN");
 
-        const form = this;
+        document.getElementById("supportForm").addEventListener("submit", function(e) {
+            e.preventDefault();
 
-        const params = {
-            user_name: form.user_name.value,
-            user_email: form.user_email.value,
-            message: form.message.value,
-            reply_to: form.user_email.value,
-            subject: "New Support Request - Halurea"
-        };
-
-        emailjs.send("service_39jqmhf", "template_k494lak", params)
-            .then(() => {
-                alert("✅ Message sent successfully!");
-                form.reset();
-            })
-            .catch((error) => {
-                alert("❌ Failed to send. Please try again.");
-                console.error("EmailJS Error:", error);
-            });
-    });
-</script>
-
+            emailjs.sendForm("service_39jqmhf", "template_k494lak", this)
+                .then(() => {
+                    alert("✅ Message sent!");
+                    this.reset();
+                })
+                .catch((error) => {
+                    alert("❌ Failed to send");
+                    console.error(error);
+                });
+        });
+    </script>
 </body>
 </html>
