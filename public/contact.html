@@ -5,6 +5,60 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Halurea Key System</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Custom Popup Styles */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 300;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+        .custom-modal-content {
+            background-color: var(--darker);
+            margin: 20% auto;
+            padding: 2rem;
+            border: 2px solid var(--neon);
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            box-shadow: var(--shadow);
+        }
+        .custom-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light);
+        }
+        .custom-modal h2 {
+            color: var(--neon);
+            margin-bottom: 1rem;
+        }
+        .custom-modal p {
+            color: var(--light);
+            margin-bottom: 1.5rem;
+        }
+        .custom-ok-btn {
+            background-color: var(--neon);
+            color: var(--dark);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .custom-ok-btn:hover {
+            background-color: var(--secondary);
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
@@ -47,6 +101,16 @@
         <p>&copy; 2026 Halurea Key System. All rights reserved.</p>
     </footer>
 
+    <!-- Custom Popup -->
+    <div id="customModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <span class="custom-close">&times;</span>
+            <h2>Message Sent!</h2>
+            <p>Thank you for reaching out. We will get back to you soon.</p>
+            <button id="customOkBtn" class="custom-ok-btn">OK</button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
         emailjs.init("z7ivKsmDeHkrAhUkN");
@@ -54,9 +118,11 @@
         document.getElementById("supportForm").addEventListener("submit", function(e) {
             e.preventDefault();
 
+            // Include all fields in the form data
             emailjs.sendForm("service_39jqmhf", "template_k494lak", this)
                 .then(() => {
-                    alert("✅ Message sent!");
+                    // Show custom popup
+                    document.getElementById("customModal").style.display = "block";
                     this.reset();
                 })
                 .catch((error) => {
@@ -64,6 +130,25 @@
                     console.error(error);
                 });
         });
+
+        // Custom Popup Logic
+        const customModal = document.getElementById("customModal");
+        const customClose = document.querySelector(".custom-close");
+        const customOkBtn = document.getElementById("customOkBtn");
+
+        customClose.onclick = function() {
+            customModal.style.display = "none";
+        };
+
+        customOkBtn.onclick = function() {
+            customModal.style.display = "none";
+        };
+
+        window.onclick = function(event) {
+            if (event.target == customModal) {
+                customModal.style.display = "none";
+            }
+        };
     </script>
 </body>
 </html>
