@@ -38,6 +38,15 @@
         </section>
     </main>
 
+    <!-- Custom Popup Modal -->
+    <div id="customPopup" class="custom-popup">
+        <div class="custom-popup-content">
+            <span class="custom-popup-close">&times;</span>
+            <h2 id="popupTitle">Message Sent!</h2>
+            <p id="popupMessage">We will get back to you soon.</p>
+        </div>
+    </div>
+
     <footer>
         <div class="footer-links">
             <a href="about.html">About</a>
@@ -53,6 +62,38 @@
         // Initialize EmailJS with your user ID
         emailjs.init("z7ivKsmDeHkrAhUkN");
 
+        // DOM Elements for Custom Popup
+        const customPopup = document.getElementById("customPopup");
+        const popupTitle = document.getElementById("popupTitle");
+        const popupMessage = document.getElementById("popupMessage");
+        const popupClose = document.querySelector(".custom-popup-close");
+
+        // Close popup
+        popupClose.addEventListener("click", () => {
+            customPopup.style.display = "none";
+        });
+
+        // Close popup if clicked outside
+        window.addEventListener("click", (e) => {
+            if (e.target === customPopup) {
+                customPopup.style.display = "none";
+            }
+        });
+
+        // Show custom popup
+        function showPopup(title, message, isSuccess) {
+            popupTitle.textContent = title;
+            popupMessage.textContent = message;
+            customPopup.style.display = "block";
+            if (isSuccess) {
+                customPopup.classList.add("success");
+                customPopup.classList.remove("error");
+            } else {
+                customPopup.classList.add("error");
+                customPopup.classList.remove("success");
+            }
+        }
+
         // Handle form submission
         document.getElementById("supportForm").addEventListener("submit", function(e) {
             e.preventDefault();
@@ -60,16 +101,16 @@
             // Send form data using EmailJS
             emailjs.sendForm(
                 "service_39jqmhf", // Your EmailJS service ID
-                "template_y3xutk8", // Your EmailJS template ID
+                "template_k494lak", // Your EmailJS template ID
                 this
             )
             .then(
                 function(response) {
-                    alert("✅ Message sent! We will get back to you soon.");
+                    showPopup("✅ Success!", "Message sent! We will get back to you soon.", true);
                     document.getElementById("supportForm").reset();
                 },
                 function(error) {
-                    alert("❌ Failed to send. Please try again later.");
+                    showPopup("❌ Error!", "Failed to send. Please try again later.", false);
                     console.error("EmailJS Error:", error);
                 }
             );
