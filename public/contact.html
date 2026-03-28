@@ -47,11 +47,50 @@
         <p>&copy; 2026 Halurea Key System. All rights reserved.</p>
     </footer>
 
+    <!-- Custom Popup for Messages -->
+    <div id="messagePopup" class="custom-popup" style="display: none;">
+        <div class="custom-popup-content">
+            <span class="custom-popup-close">&times;</span>
+            <h2 id="popupTitle"></h2>
+            <p id="popupMessage"></p>
+        </div>
+    </div>
+
     <!-- EmailJS Script -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
     <script>
         // Initialize EmailJS with your user ID
         emailjs.init("z7ivKsmDeHkrAhUkN");
+
+        // Get popup elements
+        const popup = document.getElementById('messagePopup');
+        const popupTitle = document.getElementById('popupTitle');
+        const popupMessage = document.getElementById('popupMessage');
+        const popupClose = document.querySelector('.custom-popup-close');
+
+        // Function to show custom popup
+        function showPopup(title, message, isSuccess = true) {
+            popupTitle.textContent = title;
+            popupMessage.textContent = message;
+            popup.classList.add(isSuccess ? 'success' : 'error');
+            popup.style.display = 'block';
+        }
+
+        // Function to hide popup
+        function hidePopup() {
+            popup.classList.remove('success', 'error');
+            popup.style.display = 'none';
+        }
+
+        // Close popup when clicking the close button
+        popupClose.addEventListener('click', hidePopup);
+
+        // Close popup when clicking outside the content
+        window.addEventListener('click', (e) => {
+            if (e.target === popup) {
+                hidePopup();
+            }
+        });
 
         // Handle form submission
         document.getElementById("supportForm").addEventListener("submit", function(e) {
@@ -65,11 +104,11 @@
             )
             .then(
                 function(response) {
-                    alert("✅ Message sent! We will get back to you soon.");
+                    showPopup("✅ Success!", "Your message has been sent. We'll get back to you soon.", true);
                     document.getElementById("supportForm").reset();
                 },
                 function(error) {
-                    alert("❌ Failed to send. Please try again later.");
+                    showPopup("❌ Error", "Failed to send message. Please try again later.", false);
                     console.error("EmailJS Error:", error);
                 }
             );
