@@ -6,8 +6,6 @@
     <title>Get Key - AI Key Generator</title>
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght=300;400;600&display=swap" rel="stylesheet">
-    <!-- PropellerAds SDK -->
-    <script src="https://cdn.propellerads.com/publisher.js" async></script>
 </head>
 <body>
     <!-- Hamburger Menu -->
@@ -20,44 +18,38 @@
         <ul class="nav-links">
             <li><a href="index.html">Home</a></li>
             <li><a href="getkey.html">Get Key</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="privacy.html">Privacy</a></li>
         </ul>
     </nav>
 
     <main>
         <h1>Get Your Key</h1>
         <div class="cards-container">
-            <div class="card" data-ads-required="3" data-validity="10">
+            <div class="card" data-timer="300" data-key-type="basic">
                 <h3>Basic Key</h3>
                 <p>Validity: 10 minutes</p>
-                <p>Ads required: 3</p>
+                <div class="timer">5:00</div>
                 <div class="blurred-key">###########</div>
-                <div class="progress-container">
-                    <div class="progress-bar"></div>
-                </div>
-                <p class="progress-text">0/3 ads</p>
-                <button class="watch-ads-btn">Watch Ads</button>
+                <button class="get-key-btn" disabled>Get Key</button>
+                <button class="reduce-timer-btn">Reduce Timer</button>
             </div>
-            <div class="card" data-ads-required="6" data-validity="30">
+            <div class="card" data-timer="600" data-key-type="standard">
                 <h3>Standard Key</h3>
                 <p>Validity: 30 minutes</p>
-                <p>Ads required: 6</p>
+                <div class="timer">10:00</div>
                 <div class="blurred-key">###########</div>
-                <div class="progress-container">
-                    <div class="progress-bar"></div>
-                </div>
-                <p class="progress-text">0/6 ads</p>
-                <button class="watch-ads-btn">Watch Ads</button>
+                <button class="get-key-btn" disabled>Get Key</button>
+                <button class="reduce-timer-btn">Reduce Timer</button>
             </div>
-            <div class="card" data-ads-required="8" data-validity="60">
+            <div class="card" data-timer="1200" data-key-type="good">
                 <h3>Good Key</h3>
                 <p>Validity: 1 hour</p>
-                <p>Ads required: 8</p>
+                <div class="timer">20:00</div>
                 <div class="blurred-key">###########</div>
-                <div class="progress-container">
-                    <div class="progress-bar"></div>
-                </div>
-                <p class="progress-text">0/8 ads</p>
-                <button class="watch-ads-btn">Watch Ads</button>
+                <button class="get-key-btn" disabled>Get Key</button>
+                <button class="reduce-timer-btn">Reduce Timer</button>
             </div>
         </div>
     </main>
@@ -65,9 +57,9 @@
     <!-- Footer -->
     <footer>
         <div class="footer-links">
-            <a href="about.html" target="_blank">About</a>
-            <a href="privacy.html" target="_blank">Privacy Policy</a>
-            <a href="mailto:support@yourwebsite.com" target="_blank">Contact</a>
+            <a href="about.html">About</a>
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="contact.html">Contact</a>
         </div>
         <p>&copy; 2026 AI Key Generator. All rights reserved.</p>
     </footer>
