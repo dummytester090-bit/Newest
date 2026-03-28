@@ -320,7 +320,7 @@ footer {
     background-color: var(--secondary);
 }
 
-/* Custom Popup (Centered) */
+/* Custom Popup (Perfectly Centered) */
 .custom-popup {
     display: none;
     position: fixed;
@@ -365,17 +365,13 @@ footer {
     font-size: 1.1rem;
 }
 
-/* Success popup */
+/* Success popup variant */
 .custom-popup.success .custom-popup-content {
     border-color: var(--neon);
     box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
 }
 
-.custom-popup.success h2 {
-    color: var(--neon);
-}
-
-/* Error popup */
+/* Error popup variant */
 .custom-popup.error .custom-popup-content {
     border-color: #ff4d4d;
     box-shadow: 0 0 20px rgba(255, 77, 77, 0.5);
