@@ -262,7 +262,7 @@ footer {
     filter: blur(3px);
 }
 
-/* Modal */
+/* Modal for Key */
 .modal {
     display: none;
     position: fixed;
@@ -320,7 +320,7 @@ footer {
     background-color: var(--secondary);
 }
 
-/* Custom Popup */
+/* Custom Popup (Centered) */
 .custom-popup {
     display: none;
     position: fixed;
@@ -330,18 +330,20 @@ footer {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.8);
+    align-items: center;
+    justify-content: center;
 }
 
 .custom-popup-content {
     background-color: var(--darker);
-    margin: 20% auto;
     padding: 2rem;
-    border: 1px solid var(--neon);
+    border: 2px solid var(--neon);
     border-radius: 8px;
     width: 80%;
     max-width: 500px;
     text-align: center;
     position: relative;
+    box-shadow: 0 0 20px rgba(0, 255, 157, 0.3);
 }
 
 .custom-popup-close {
@@ -363,12 +365,20 @@ footer {
     font-size: 1.1rem;
 }
 
-.custom-popup.success {
+/* Success popup */
+.custom-popup.success .custom-popup-content {
     border-color: var(--neon);
+    box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
 }
 
-.custom-popup.error {
+.custom-popup.success h2 {
+    color: var(--neon);
+}
+
+/* Error popup */
+.custom-popup.error .custom-popup-content {
     border-color: #ff4d4d;
+    box-shadow: 0 0 20px rgba(255, 77, 77, 0.5);
 }
 
 .custom-popup.error h2 {
