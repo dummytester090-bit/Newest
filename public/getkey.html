@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Get Key - AI Key Generator</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght=300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Hamburger Menu -->
     <nav class="navbar">
         <div class="hamburger">
             <div class="line"></div>
@@ -27,7 +26,7 @@
     <main>
         <h1>Get Your Key</h1>
         <div class="cards-container">
-            <div class="card" data-timer="300" data-key-type="basic">
+            <div class="card" data-timer="300" data-key-type="basic" data-validity="10">
                 <h3>Basic Key</h3>
                 <p>Validity: 10 minutes</p>
                 <div class="timer">5:00</div>
@@ -35,7 +34,7 @@
                 <button class="get-key-btn" disabled>Get Key</button>
                 <button class="reduce-timer-btn">Reduce Timer</button>
             </div>
-            <div class="card" data-timer="600" data-key-type="standard">
+            <div class="card" data-timer="600" data-key-type="standard" data-validity="30">
                 <h3>Standard Key</h3>
                 <p>Validity: 30 minutes</p>
                 <div class="timer">10:00</div>
@@ -43,7 +42,7 @@
                 <button class="get-key-btn" disabled>Get Key</button>
                 <button class="reduce-timer-btn">Reduce Timer</button>
             </div>
-            <div class="card" data-timer="1200" data-key-type="good">
+            <div class="card" data-timer="1200" data-key-type="good" data-validity="60">
                 <h3>Good Key</h3>
                 <p>Validity: 1 hour</p>
                 <div class="timer">20:00</div>
@@ -54,7 +53,6 @@
         </div>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-links">
             <a href="about.html">About</a>
@@ -64,7 +62,6 @@
         <p>&copy; 2026 AI Key Generator. All rights reserved.</p>
     </footer>
 
-    <!-- Popup Modal for Key -->
     <div id="keyModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
