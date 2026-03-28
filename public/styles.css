@@ -319,3 +319,58 @@ footer {
 .copy-btn:hover {
     background-color: var(--secondary);
 }
+
+/* Custom Popup */
+.custom-popup {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.custom-popup-content {
+    background-color: var(--darker);
+    margin: 20% auto;
+    padding: 2rem;
+    border: 1px solid var(--neon);
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+}
+
+.custom-popup-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--light);
+}
+
+.custom-popup h2 {
+    color: var(--neon);
+    margin-bottom: 1rem;
+}
+
+.custom-popup p {
+    color: var(--light);
+    font-size: 1.1rem;
+}
+
+.custom-popup.success {
+    border-color: var(--neon);
+}
+
+.custom-popup.error {
+    border-color: #ff4d4d;
+}
+
+.custom-popup.error h2 {
+    color: #ff4d4d;
+}
