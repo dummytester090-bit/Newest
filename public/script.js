@@ -63,14 +63,37 @@ function generateKey(length = 10) {
 document.querySelectorAll('.card').forEach(card => {
     const timerElement = card.querySelector('.timer');
     const getKeyBtn = card.querySelector('.get-key-btn');
-    const reduceTimerBtn = card.querySelector('.reduce-timer-btn');
     const blurredKey = card.querySelector('.blurred-key');
+    const keyType = card.dataset.keyType;
     const validityMinutes = parseInt(card.dataset.validity);
-    if (isNaN(validityMinutes)) return;
+    const fullTimerSeconds = parseInt(card.dataset.timer);
+    if (isNaN(validityMinutes) || isNaN(fullTimerSeconds)) return;
 
-    let timer = parseInt(card.dataset.timer);
+    let timer = fullTimerSeconds;
     let interval;
     let isTimerRunning = true;
+
+    // Load saved end time from sessionStorage
+    const storageKey = `halurea_timer_end_${keyType}`;
+    let endTime = sessionStorage.getItem(storageKey);
+    let remainingSeconds = null;
+
+    if (endTime) {
+        endTime = parseInt(endTime);
+        const now = Date.now();
+        if (endTime > now) {
+            remainingSeconds = Math.floor((endTime - now) / 1000);
+            if (remainingSeconds > 0 && remainingSeconds <= fullTimerSeconds) {
+                timer = remainingSeconds;
+            } else {
+                timer = fullTimerSeconds;
+                sessionStorage.removeItem(storageKey);
+            }
+        } else {
+            timer = fullTimerSeconds;
+            sessionStorage.removeItem(storageKey);
+        }
+    }
 
     function updateTimerDisplay(seconds) {
         const mins = Math.max(0, Math.floor(seconds / 60));
@@ -78,9 +101,26 @@ document.querySelectorAll('.card').forEach(card => {
         timerElement.textContent = `${mins}:${secs < 10 ? '0' + secs : secs}`;
     }
 
+    function saveEndTime(secondsRemaining) {
+        if (secondsRemaining <= 0) {
+            sessionStorage.removeItem(storageKey);
+            return;
+        }
+        const newEndTime = Date.now() + (secondsRemaining * 1000);
+        sessionStorage.setItem(storageKey, newEndTime);
+    }
+
     function startTimer() {
         let seconds = timer;
         updateTimerDisplay(seconds);
+        if (seconds <= 0) {
+            getKeyBtn.disabled = false;
+            getKeyBtn.classList.add('glow');
+            isTimerRunning = false;
+            sessionStorage.removeItem(storageKey);
+            return;
+        }
+        saveEndTime(seconds);
         interval = setInterval(() => {
             if (!isTimerRunning) return;
             seconds--;
@@ -90,6 +130,9 @@ document.querySelectorAll('.card').forEach(card => {
                 getKeyBtn.disabled = false;
                 getKeyBtn.classList.add('glow');
                 isTimerRunning = false;
+                sessionStorage.removeItem(storageKey);
+            } else {
+                saveEndTime(seconds);
             }
         }, 1000);
     }
@@ -105,22 +148,18 @@ document.querySelectorAll('.card').forEach(card => {
             blurredKey.textContent = key;
             blurredKey.style.filter = 'none';
             showKeyModal(key);
-            timer = parseInt(card.dataset.timer);
+
+            // Reset timer and clear stored end time
+            timer = fullTimerSeconds;
             clearInterval(interval);
             isTimerRunning = true;
             getKeyBtn.disabled = true;
             getKeyBtn.classList.remove('glow');
+            sessionStorage.removeItem(storageKey);
             startTimer();
         } catch (error) {
             alert('Failed to generate key. Please try again.');
+            console.error(error);
         }
-    });
-
-    reduceTimerBtn.addEventListener('click', () => {
-        if (timer > 120) timer -= 120;
-        else timer = 0;
-        clearInterval(interval);
-        isTimerRunning = true;
-        startTimer();
     });
 });
