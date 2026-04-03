@@ -147,7 +147,7 @@ document.querySelectorAll('.card').forEach(card => {
     startTimer();
 
     // Cloud Function URL – replace with your actual function URL
-    const functionUrl = 'https://us-central1-halurea1.cloudfunctions.net/generateKey';
+    const functionUrl = 'https://halurea1.onrender.com/';
 
     getKeyBtn.addEventListener('click', async () => {
         try {
