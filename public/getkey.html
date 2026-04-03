@@ -7,7 +7,7 @@
     <base href="./">
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-xxxxxxxxxxxxx" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2001994870159913" crossorigin="anonymous"></script>
 </head>
 <body>
     <nav class="navbar">
@@ -16,6 +16,10 @@
             <li><a href="./index.html">Home</a></li>
             <li><a href="./getkey.html">Get Key</a></li>
             <li><a href="./blog.html">Blog</a></li>
+            <li><a href="./how-to-play.html">How to Play</a></li>
+            <li><a href="./tips-and-tricks.html">Tips & Tricks</a></li>
+            <li><a href="./updates.html">Updates</a></li>
+            <li><a href="./guide.html">Guide</a></li>
             <li><a href="./about.html">About</a></li>
             <li><a href="./contact.html">Contact</a></li>
             <li><a href="./privacy.html">Privacy</a></li>
@@ -25,32 +29,39 @@
     <main>
         <h1>Generate Your Access Key</h1>
         <div class="cards-container">
-            <div class="card" data-timer="300" data-key-type="basic" data-validity="10">
+            <div class="card" data-timer="300" data-key-type="basic" data-validity="10" data-uses="1">
                 <h3>Basic Key</h3>
                 <p>Validity: 10 minutes</p>
+                <p>Uses: <span class="uses-count">1 time</span></p>
                 <div class="timer">5:00</div>
                 <div class="blurred-key">###########</div>
-                <button class="get-key-btn" disabled>Get Key</button>
+                <div class="button-group">
+                    <button class="get-key-btn" disabled>Get Key</button>
+                    <button class="reduce-btn" disabled title="Reduce timer by 2 seconds (1s cooldown)">⚡</button>
+                </div>
             </div>
-            <div class="card" data-timer="600" data-key-type="standard" data-validity="30">
+            <div class="card" data-timer="600" data-key-type="standard" data-validity="30" data-uses="2">
                 <h3>Standard Key</h3>
                 <p>Validity: 30 minutes</p>
+                <p>Uses: <span class="uses-count">2 times</span></p>
                 <div class="timer">10:00</div>
                 <div class="blurred-key">###########</div>
-                <button class="get-key-btn" disabled>Get Key</button>
+                <div class="button-group">
+                    <button class="get-key-btn" disabled>Get Key</button>
+                    <button class="reduce-btn" disabled title="Reduce timer by 2 seconds (1s cooldown)">⚡</button>
+                </div>
             </div>
-            <div class="card" data-timer="1200" data-key-type="good" data-validity="60">
+            <div class="card" data-timer="1200" data-key-type="good" data-validity="60" data-uses="5">
                 <h3>Good Key</h3>
                 <p>Validity: 1 hour</p>
+                <p>Uses: <span class="uses-count">5 times</span></p>
                 <div class="timer">20:00</div>
                 <div class="blurred-key">###########</div>
-                <button class="get-key-btn" disabled>Get Key</button>
+                <div class="button-group">
+                    <button class="get-key-btn" disabled>Get Key</button>
+                    <button class="reduce-btn" disabled title="Reduce timer by 2 seconds (1s cooldown)">⚡</button>
+                </div>
             </div>
-        </div>
-
-        <div class="ad-container">
-            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-xxxxxxxxxxxxx" data-ad-slot="xxxxxxxxxx" data-ad-format="auto"></ins>
-            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
 
         <div class="info-note">
@@ -64,6 +75,10 @@
             <a href="./privacy.html">Privacy Policy</a>
             <a href="./contact.html">Contact</a>
             <a href="./blog.html">Blog</a>
+            <a href="./how-to-play.html">How to Play</a>
+            <a href="./tips-and-tricks.html">Tips & Tricks</a>
+            <a href="./updates.html">Updates</a>
+            <a href="./guide.html">Guide</a>
         </div>
         <p>&copy; 2026 Halurea – Free AI Tools Access. All rights reserved.</p>
     </footer>
