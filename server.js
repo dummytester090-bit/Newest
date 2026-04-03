@@ -1,30 +1,22 @@
-const express = require('express');
-const cors = require('cors');
-const crypto = require('crypto');
+// server.js (Render backend)
+import express from 'express';
+import cors from 'cors';
+import { randomBytes } from 'crypto';
+
 const app = express();
-const port = process.env.PORT || 3000;
-
-// Temporary in-memory DB
-const keysDB = {};
-
 app.use(cors());
 app.use(express.json());
 
 app.post('/generateKey', (req, res) => {
-  const { validityMinutes, maxUses } = req.body;
-  if (!validityMinutes || !maxUses) return res.status(400).json({ success: false, error: 'Missing validityMinutes or maxUses' });
+    const { validityMinutes, maxUses } = req.body;
 
-  try {
-    const key = crypto.randomBytes(16).toString('hex');
-    const expiry = Date.now() + validityMinutes * 60 * 1000;
+    if (!validityMinutes || !maxUses) {
+        return res.json({ success: false, error: 'Invalid request' });
+    }
 
-    keysDB[key] = { expiry, remainingUses: maxUses, used: false, createdAt: Date.now() };
-
+    const key = randomBytes(8).toString('hex'); // Generate random key
     res.json({ success: true, key });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, error: 'Internal server error' });
-  }
 });
 
-app.listen(port, () => console.log(`Backend server running on port ${port}`));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
