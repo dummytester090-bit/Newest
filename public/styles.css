@@ -27,6 +27,7 @@ h1, h2, h3 {
     text-shadow: var(--shadow);
 }
 
+/* Navbar - hamburger always visible */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -41,27 +42,34 @@ h1, h2, h3 {
 .hamburger {
     display: block;
     cursor: pointer;
+    z-index: 101;
 }
 
 .hamburger .line {
-    width: 25px;
-    height: 3px;
+    width: 30px;
+    height: 4px;
     background-color: var(--neon);
-    margin: 5px;
+    margin: 6px 0;
     transition: all 0.3s ease;
+    border-radius: 2px;
 }
 
+/* Navigation links - hidden by default on all devices */
 .nav-links {
-    position: absolute;
-    top: 70px;
+    position: fixed;
+    top: 0;
     left: -100%;
-    width: 100%;
+    width: 250px;
+    height: 100%;
     background-color: var(--darker);
     flex-direction: column;
     align-items: center;
-    padding: 1rem 0;
+    justify-content: center;
+    padding: 2rem 0;
     list-style: none;
     transition: left 0.3s ease;
+    z-index: 99;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.5);
 }
 
 .nav-links.active {
@@ -69,18 +77,35 @@ h1, h2, h3 {
 }
 
 .nav-links li {
-    margin: 1rem 0;
+    margin: 1.5rem 0;
 }
 
 .nav-links a {
     color: var(--light);
     text-decoration: none;
     font-weight: 600;
+    font-size: 1.2rem;
     transition: color 0.3s ease;
 }
 
 .nav-links a:hover {
     color: var(--neon);
+}
+
+/* Overlay when menu is open */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.7);
+    z-index: 98;
+    display: none;
+}
+
+.overlay.active {
+    display: block;
 }
 
 main {
@@ -89,11 +114,11 @@ main {
     margin: 0 auto;
 }
 
-.hero, .features, .how-to, .featured-article, .faq-teaser, .contact, .about, .privacy, .blog-posts {
+.hero, .features, .how-to-play, .tips, .cta-container, .contact, .about, .privacy, .blog-posts {
     margin-bottom: 3rem;
 }
 
-.hero h1, .features h2, .how-to h2, .featured-article h2, .faq-teaser h2, .contact h1, .about h1, .privacy h1 {
+.hero h1, .features h2, .how-to-play h2, .tips h2, .contact h1, .about h1, .privacy h1, .blog-posts h1 {
     text-align: center;
     margin-bottom: 1rem;
 }
@@ -134,33 +159,14 @@ main {
     margin-bottom: 0.5rem;
 }
 
-.how-to ol {
-    max-width: 600px;
+.how-to-play ol, .tips ul {
+    max-width: 800px;
     margin: 0 auto;
     padding-left: 1.5rem;
 }
 
-.how-to li, .how-to p {
+.how-to-play li, .tips li {
     margin-bottom: 0.5rem;
-}
-
-.faq-teaser p {
-    text-align: center;
-}
-
-.ad-container {
-    margin: 2rem auto;
-    max-width: 728px;
-    text-align: center;
-    min-height: 90px;
-}
-
-.info-note {
-    text-align: center;
-    background-color: var(--darker);
-    padding: 1rem;
-    border-radius: 8px;
-    margin-top: 2rem;
 }
 
 .discord-link {
@@ -221,9 +227,9 @@ footer {
 .footer-links {
     display: flex;
     justify-content: center;
-    margin-bottom: 1rem;
     flex-wrap: wrap;
     gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .footer-links a {
@@ -276,26 +282,40 @@ footer {
     text-shadow: var(--shadow);
 }
 
-.get-key-btn {
+.button-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.get-key-btn, .reduce-btn {
+    flex: 1;
     background-color: var(--neon);
     color: var(--dark);
     border: none;
-    padding: 0.75rem 1.5rem;
+    padding: 0.75rem;
     border-radius: 4px;
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
-    width: 100%;
     font-family: 'Poppins', sans-serif;
 }
 
-.get-key-btn:hover {
+.reduce-btn {
     background-color: var(--secondary);
+    color: var(--dark);
+    font-size: 1.2rem;
+    flex: 0.3;
 }
 
-.get-key-btn:disabled {
+.get-key-btn:hover, .reduce-btn:hover {
+    opacity: 0.8;
+}
+
+.get-key-btn:disabled, .reduce-btn:disabled {
     background-color: rgba(0, 255, 157, 0.3);
     cursor: not-allowed;
+    opacity: 0.6;
 }
 
 .get-key-btn.glow {
@@ -317,6 +337,14 @@ footer {
     text-shadow: 0 0 5px var(--neon);
     margin: 1rem 0;
     filter: blur(3px);
+}
+
+.info-note {
+    text-align: center;
+    background-color: var(--darker);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-top: 2rem;
 }
 
 /* Modal */
@@ -377,6 +405,51 @@ footer {
     background-color: var(--secondary);
 }
 
+/* Popup for contact form */
+.custom-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+    display: none;
+}
+.custom-popup-content {
+    background-color: var(--darker);
+    padding: 2rem;
+    border: 2px solid var(--neon);
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 0 20px rgba(0, 255, 157, 0.3);
+}
+.custom-popup-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--light);
+}
+.custom-popup.success .custom-popup-content {
+    border-color: var(--neon);
+    box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+}
+.custom-popup.error .custom-popup-content {
+    border-color: #ff4d4d;
+    box-shadow: 0 0 20px rgba(255, 77, 77, 0.5);
+}
+.custom-popup.error h2 {
+    color: #ff4d4d;
+}
+
 /* Blog styling */
 .blog-posts article {
     background-color: var(--darker);
@@ -397,20 +470,24 @@ footer {
     padding-left: 1.5rem;
 }
 
-/* Responsive */
-@media (min-width: 768px) {
-    .hamburger {
-        display: none;
-    }
-    .nav-links {
-        position: static;
-        display: flex;
-        flex-direction: row;
-        background: transparent;
-        width: auto;
-        gap: 2rem;
-    }
-    .nav-links li {
-        margin: 0;
-    }
+/* Content pages */
+.content-page {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: var(--darker);
+    padding: 2rem;
+    border-radius: 8px;
+    line-height: 1.8;
 }
+.content-page h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+.content-page p, .content-page ul, .content-page ol {
+    margin-bottom: 1rem;
+}
+.content-page ul, .content-page ol {
+    padding-left: 1.5rem;
+}
+
+/* No media query for hamburger – it's always visible */
