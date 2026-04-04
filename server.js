@@ -1,10 +1,14 @@
 // server.js
-import express from 'express';
-import cors from 'cors';
-import { randomBytes } from 'crypto';
-import admin from 'firebase-admin';
+const express = require('express');
+const cors = require('cors');
+const { randomBytes } = require('crypto');
+const admin = require('firebase-admin');
 
-// 🚨 Use service account from environment variable
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// 🔥 Initialize Firebase Admin from ENV
 const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
 admin.initializeApp({
@@ -14,28 +18,28 @@ admin.initializeApp({
 
 const db = admin.database();
 
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// Helper: default key types
-const KEY_TYPES = {
+// Mapping keyType to validity & uses
+const keySettings = {
     basic: { validityMinutes: 10, maxUses: 1 },
     standard: { validityMinutes: 30, maxUses: 2 },
-    good: { validityMinutes: 60, maxUses: 8 } // updated from 5 → 8
+    good: { validityMinutes: 60, maxUses: 8 }
 };
 
 // ✅ Generate Key
 app.post('/generatekey', async (req, res) => {
+    const { keyType } = req.body;
+
+    if (!keyType || !keySettings[keyType]) {
+        return res.json({ success: false, error: 'Invalid key type' });
+    }
+
+    const { validityMinutes, maxUses } = keySettings[keyType];
+    const key = randomBytes(8).toString('hex');
+    const expiry = Date.now() + validityMinutes * 60 * 1000;
+
     try {
-        const { keyType } = req.body;
-        if (!KEY_TYPES[keyType]) return res.json({ success: false, error: 'Invalid key type' });
-
-        const { validityMinutes, maxUses } = KEY_TYPES[keyType];
-        const key = randomBytes(8).toString('hex').toUpperCase();
-        const expiry = Date.now() + validityMinutes * 60 * 1000;
-
-        await db.ref('keys').push({
+        const ref = db.ref('keys').push();
+        await ref.set({
             key,
             keyType,
             expiry,
@@ -44,19 +48,20 @@ app.post('/generatekey', async (req, res) => {
             createdAt: Date.now()
         });
 
-        res.json({ success: true, key, validityMinutes, maxUses });
+        res.json({ success: true, key, maxUses });
     } catch (err) {
         console.error(err);
         res.json({ success: false, error: 'Database error' });
     }
 });
 
-// ✅ Use / Redeem Key
+// ✅ Validate / Use Key
 app.post('/usekey', async (req, res) => {
-    try {
-        const { key } = req.body;
-        if (!key) return res.json({ success: false, error: 'No key provided' });
+    const { key } = req.body;
 
+    if (!key) return res.json({ success: false, error: 'No key provided' });
+
+    try {
         const snapshot = await db.ref('keys').once('value');
         let found = null;
         let refKey = null;
@@ -71,7 +76,7 @@ app.post('/usekey', async (req, res) => {
 
         if (!found) return res.json({ success: false, error: 'Invalid key' });
 
-        // Expired key
+        // Expired
         if (Date.now() > found.expiry) {
             await refKey.remove();
             return res.json({ success: false, error: 'Key expired' });
@@ -83,27 +88,23 @@ app.post('/usekey', async (req, res) => {
             return res.json({ success: false, error: 'Key fully used' });
         }
 
-        // ✅ Increment usage
+        // ✅ Increase usage
         await refKey.update({ used: found.used + 1 });
+        res.json({ success: true, remainingUses: found.maxUses - (found.used + 1) });
 
-        res.json({
-            success: true,
-            keyType: found.keyType,
-            remainingUses: found.maxUses - (found.used + 1),
-            expiry: found.expiry
-        });
     } catch (err) {
         console.error(err);
         res.json({ success: false, error: 'Server error' });
     }
 });
 
-// ✅ Auto cleanup expired or fully used keys every 60s
+// ✅ Auto cleanup expired/used keys
 setInterval(async () => {
     try {
         const snapshot = await db.ref('keys').once('value');
         snapshot.forEach(child => {
             const data = child.val();
+            if (!data) return;
             if (Date.now() > data.expiry || data.used >= data.maxUses) {
                 child.ref.remove();
             }
@@ -112,8 +113,7 @@ setInterval(async () => {
     } catch (err) {
         console.error("Cleanup error:", err);
     }
-}, 60000);
+}, 60000); // every 60s
 
-// ✅ Ready
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Halurea Key Backend running on port ${PORT}`));
