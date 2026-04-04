@@ -17,6 +17,7 @@ overlay.addEventListener('click', () => {
     overlay.classList.remove('active');
 });
 
+// Firebase (optional analytics)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-analytics.js";
 
@@ -34,14 +35,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 
+// Modal
 const modal = document.getElementById('keyModal');
 const closeBtn = document.querySelector('.close');
 const copyKeyBtn = document.getElementById('copyKey');
 const generatedKeyDisplay = document.getElementById('generatedKey');
+const remainingUsesDisplay = document.getElementById('remainingUses');
 
-function showKeyModal(key) {
+function showKeyModal(key, remainingUses) {
     if (generatedKeyDisplay) {
         generatedKeyDisplay.textContent = key;
+        if (remainingUsesDisplay) remainingUsesDisplay.textContent = `Uses left: ${remainingUses}`;
         modal.style.display = 'block';
     }
 }
@@ -80,6 +84,7 @@ document.querySelectorAll('.card').forEach(card => {
     let canClick = true;
     const storageKey = `halurea_timer_end_${keyType}`;
 
+    // Restore timer from sessionStorage
     let endTime = sessionStorage.getItem(storageKey);
     if (endTime) {
         endTime = parseInt(endTime);
@@ -131,8 +136,7 @@ document.querySelectorAll('.card').forEach(card => {
 
     startTimer();
 
-    // ✅ FIXED: Render backend URL with correct endpoint
-    const functionUrl = 'https://halurea1.onrender.com/generatekey'; 
+    const functionUrl = 'https://halurea1.onrender.com/generatekey';
 
     getKeyBtn.addEventListener('click', async () => {
         try {
@@ -142,19 +146,24 @@ document.querySelectorAll('.card').forEach(card => {
             const res = await fetch(functionUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ validityMinutes, maxUses })
+                body: JSON.stringify({ keyType })
             });
 
             const data = await res.json();
 
             if (data.success) {
                 const key = data.key;
+                const remainingUses = data.maxUses;
+
                 blurredKey.textContent = key;
                 blurredKey.style.filter = 'none';
-                showKeyModal(key);
+                showKeyModal(key, remainingUses);
+
+                // reset timer
                 timer = fullTimerSeconds;
                 clearInterval(interval);
                 startTimer();
+
                 getKeyBtn.disabled = true;
                 getKeyBtn.textContent = 'Get Key';
                 getKeyBtn.classList.remove('glow');
