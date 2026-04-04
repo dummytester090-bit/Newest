@@ -1,153 +1,169 @@
-const express = require('express');
-const cors = require('cors');
-const { randomBytes } = require('crypto');
-const admin = require('firebase-admin');
+// public/script.js
 
-const app = express();
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.nav-links');
+const overlay = document.createElement('div');
+overlay.className = 'overlay';
+document.body.appendChild(overlay);
 
-// ✅ MIDDLEWARE
-app.use(cors());
-app.use(express.json());
-
-// 🔥 SAFE FIREBASE INIT (FIXED)
-let db;
-
-try {
-    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-
-    admin.initializeApp({
-        credential: admin.credential.cert({
-            projectId: serviceAccount.project_id,
-            clientEmail: serviceAccount.client_email,
-            privateKey: serviceAccount.private_key.replace(/\\n/g, '\n')
-        }),
-        databaseURL: "https://halurea1.firebaseio.com"
+if (hamburger && navLinks) {
+    hamburger.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        overlay.classList.toggle('active');
     });
-
-    db = admin.database();
-    console.log("✅ Firebase connected");
-
-} catch (err) {
-    console.error("❌ Firebase init error:", err);
 }
 
-// ✅ TEST ROUTE (VERY IMPORTANT)
-app.get('/', (req, res) => {
-    res.send("🔥 Backend is alive!");
+overlay.addEventListener('click', () => {
+    navLinks.classList.remove('active');
+    overlay.classList.remove('active');
 });
 
-// ✅ GENERATE KEY
-app.post('/generatekey', async (req, res) => {
-    console.log("📩 Incoming request:", req.body);
+// 🔥 REMOVE FIREBASE IMPORT (TEMP FIX)
+// Firebase is NOT needed on frontend right now
 
-    const { validityMinutes, maxUses } = req.body;
+const modal = document.getElementById('keyModal');
+const closeBtn = document.querySelector('.close');
+const copyKeyBtn = document.getElementById('copyKey');
+const generatedKeyDisplay = document.getElementById('generatedKey');
 
-    if (!validityMinutes || !maxUses) {
-        return res.json({ success: false, error: 'Invalid request data' });
+function showKeyModal(key) {
+    if (generatedKeyDisplay) {
+        generatedKeyDisplay.textContent = key;
+        modal.style.display = 'block';
     }
+}
 
-    try {
-        const key = randomBytes(8).toString('hex');
-        const expiry = Date.now() + (validityMinutes * 60 * 1000);
+if (copyKeyBtn) {
+    copyKeyBtn.addEventListener('click', () => {
+        navigator.clipboard.writeText(generatedKeyDisplay.textContent)
+            .then(() => alert('Key copied to clipboard!'));
+    });
+}
 
-        const ref = db.ref('keys').push();
+if (closeBtn) {
+    closeBtn.addEventListener('click', () => modal.style.display = 'none');
+}
 
-        await ref.set({
-            key,
-            expiry,
-            maxUses,
-            used: 0,
-            createdAt: Date.now()
-        });
-
-        console.log("✅ Key created:", key);
-
-        res.json({ success: true, key });
-
-    } catch (err) {
-        console.error("❌ Generate error:", err);
-        res.json({ success: false, error: 'Server error' });
-    }
+window.addEventListener('click', (e) => {
+    if (e.target === modal) modal.style.display = 'none';
 });
 
-// ✅ USE KEY
-app.post('/usekey', async (req, res) => {
-    const { key } = req.body;
+// --- TIMER & KEY SYSTEM ---
+document.querySelectorAll('.card').forEach(card => {
 
-    if (!key) {
-        return res.json({ success: false, error: 'No key provided' });
+    const timerElement = card.querySelector('.timer');
+    const getKeyBtn = card.querySelector('.get-key-btn');
+    const reduceBtn = card.querySelector('.reduce-btn');
+    const blurredKey = card.querySelector('.blurred-key');
+
+    const keyType = card.dataset.keyType;
+    const validityMinutes = parseInt(card.dataset.validity);
+    const fullTimerSeconds = parseInt(card.dataset.timer);
+    const maxUses = parseInt(card.dataset.uses);
+
+    if (isNaN(validityMinutes) || isNaN(fullTimerSeconds) || isNaN(maxUses)) return;
+
+    let timer = fullTimerSeconds;
+    let interval;
+    let canClick = true;
+
+    function updateTimerDisplay(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        timerElement.textContent = `${mins}:${secs < 10 ? '0'+secs : secs}`;
     }
 
-    try {
-        const snapshot = await db.ref('keys').once('value');
+    function enableGetKeyButton() {
+        getKeyBtn.disabled = false;
+        getKeyBtn.classList.add('glow');
+        reduceBtn.disabled = true;
+    }
 
-        let found = null;
-        let refKey = null;
+    function startTimer() {
+        updateTimerDisplay(timer);
 
-        snapshot.forEach(child => {
-            const data = child.val();
-            if (data.key === key) {
-                found = data;
-                refKey = child.ref;
+        if (timer <= 0) {
+            enableGetKeyButton();
+            return;
+        }
+
+        reduceBtn.disabled = false;
+
+        interval = setInterval(() => {
+            timer--;
+            updateTimerDisplay(timer);
+
+            if (timer <= 0) {
+                clearInterval(interval);
+                enableGetKeyButton();
             }
-        });
-
-        if (!found) {
-            return res.json({ success: false, error: 'Invalid key' });
-        }
-
-        if (Date.now() > found.expiry) {
-            await refKey.remove();
-            return res.json({ success: false, error: 'Expired' });
-        }
-
-        if (found.used >= found.maxUses) {
-            await refKey.remove();
-            return res.json({ success: false, error: 'No uses left' });
-        }
-
-        await refKey.update({
-            used: found.used + 1
-        });
-
-        res.json({
-            success: true,
-            remaining: found.maxUses - (found.used + 1)
-        });
-
-    } catch (err) {
-        console.error(err);
-        res.json({ success: false, error: 'Server error' });
+        }, 1000);
     }
-});
 
-// ✅ AUTO CLEANUP
-setInterval(async () => {
-    try {
-        const snapshot = await db.ref('keys').once('value');
+    startTimer();
 
-        snapshot.forEach(child => {
-            const data = child.val();
+    // ✅ BACKEND URL
+    const functionUrl = 'https://halurea1.onrender.com/generatekey';
 
-            if (
-                Date.now() > data.expiry ||
-                data.used >= data.maxUses
-            ) {
-                child.ref.remove();
+    getKeyBtn.addEventListener('click', async () => {
+        try {
+            getKeyBtn.disabled = true;
+            getKeyBtn.textContent = 'Generating...';
+
+            const res = await fetch(functionUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    validityMinutes,
+                    maxUses
+                })
+            });
+
+            const data = await res.json();
+
+            if (data.success) {
+                blurredKey.textContent = data.key;
+                blurredKey.style.filter = 'none';
+                showKeyModal(data.key);
+
+                timer = fullTimerSeconds;
+                clearInterval(interval);
+                startTimer();
+
+                getKeyBtn.textContent = 'Get Key';
+                getKeyBtn.classList.remove('glow');
+
+            } else {
+                throw new Error(data.error);
             }
-        });
 
-        console.log("🧹 Cleanup done");
+        } catch (err) {
+            console.error(err);
+            alert('Failed to generate key');
+            getKeyBtn.disabled = false;
+            getKeyBtn.textContent = 'Get Key';
+        }
+    });
 
-    } catch (err) {
-        console.error("Cleanup error:", err);
-    }
+    reduceBtn.addEventListener('click', () => {
+        if (!canClick || timer <= 0) return;
 
-}, 60000);
+        timer = Math.max(0, timer - 2);
+        updateTimerDisplay(timer);
 
-// ✅ START SERVER
-const PORT = process.env.PORT || 3000;
+        if (timer <= 0) {
+            clearInterval(interval);
+            enableGetKeyButton();
+            return;
+        }
 
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
+        canClick = false;
+        reduceBtn.disabled = true;
+
+        setTimeout(() => {
+            canClick = true;
+            reduceBtn.disabled = false;
+        }, 1000);
+    });
+
 });
