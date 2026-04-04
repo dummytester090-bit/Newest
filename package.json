@@ -1,7 +1,7 @@
 {
   "name": "halurea-backend",
   "version": "1.0.0",
-  "description": "Halurea key system",
+  "description": "Backend for key system",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
